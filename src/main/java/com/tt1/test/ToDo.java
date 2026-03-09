@@ -8,6 +8,10 @@ public class ToDo{
 	private LocalDate fechaL;
 	private boolean completado;
 	
+	public ToDo(String n, String desc, LocalDate fecha, boolean complet) {
+		throw new UnsupportedOperationException("Clase aún no implementada.");
+	}
+	
 	public String getNombre() {
 		throw new UnsupportedOperationException("Clase aún no implementada.");
 	}
