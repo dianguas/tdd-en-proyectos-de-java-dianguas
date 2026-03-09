@@ -10,6 +10,8 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import com.tt1.test.mock.ToDoMock;
+
 class TestServicio {
 	
 	private LocalTime aux=LocalTime.of(14,30);
@@ -33,24 +35,24 @@ class TestServicio {
 
 	@Test
 	void testCrearServicio() {
-		
 		servicio.crearServicio("AYUDA", aux);
-		assertEquals("AYUDA","");
+		assertEquals("AYUDA",ToDoMock.ejemplo);
 	}
 
 	@Test
 	void testAgnadirCorreo() {
-		fail("Not yet implemented");
+		servicio.agnadirCorreo("ejemplo@unirioja.es");
+		assertEquals("ejemplo@unirioja.es",null);
 	}
 
 	@Test
 	void testFinalizarTarea() {
-		fail("Not yet implemented");
+		servicio.finalizarTarea(ToDoMock.ejemplo);
 	}
 
 	@Test
 	void testMostrarTareas() {
-		fail("Not yet implemented");
+		servicio.mostrarTareas();
 	}
 
 }
