@@ -1,20 +1,43 @@
 package com.tt1.test;
 
 public class Repositorio {
-	
-	public ToDo buscarServicio(String nombre) {
-		throw new UnsupportedOperationException("Clase aún no implementada.");
-	}
-	
-	public boolean completadoServicio(ToDo servicio) {
-		throw new UnsupportedOperationException("Clase aún no implementada.");
-	}
-	
-	public boolean agnadirServicio(ToDo servicio) {
-		throw new UnsupportedOperationException("Clase aún no implementada.");
-	}
-	
-	public boolean agnadirCorreo(String correo) {
-		throw new UnsupportedOperationException("Clase aún no implementada.");
-	}
+
+    private DBStub bd;
+
+    public Repositorio(DBStub bd) {
+        this.bd = bd;
+    }
+
+    public Repositorio() {
+        this.bd = new DBStub();
+    }
+
+    public String buscarServicio(String nombre) {
+        ToDo t = bd.READ(nombre);
+        if (t != null) {
+            return t.getNombre();
+        }
+        return null;
+    }
+
+    public boolean completadoServicio(ToDo servicio) {
+        servicio.setCompletado(true);
+        return bd.UPDATE(servicio);
+    }
+
+    public boolean agnadirServicio(ToDo servicio) {
+        return bd.CREATE(servicio);
+    }
+
+    public boolean agnadirCorreo(String correo) {
+        return bd.agnadirCorreo(correo);
+    }
+
+    public java.util.List<ToDo> getTareas() {
+        return bd.getServicios();
+    }
+
+    public java.util.Collection<String> getCorreos() {
+        return bd.getCorreos();
+    }
 }

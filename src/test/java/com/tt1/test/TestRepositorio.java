@@ -11,43 +11,91 @@ import org.junit.jupiter.api.Test;
 import com.tt1.test.mock.ToDoMock;
 
 class TestRepositorio {
-	
-	private Repositorio repo=new Repositorio();
 
-	@BeforeAll
-	static void setUpBeforeClass() throws Exception {
-	}
+    private Repositorio repo;
+    private DBStub bdControlada;
 
-	@AfterAll
-	static void tearDownAfterClass() throws Exception {
-	}
+    @BeforeAll
+    static void setUpBeforeClass() throws Exception {
+        System.out.println("== Empezando tests de Repositorio ==");
+    }
 
-	@BeforeEach
-	void setUp() throws Exception {
-	}
+    @AfterAll
+    static void tearDownAfterClass() throws Exception {
+        System.out.println("== Tests de Repositorio finalizados ==");
+    }
 
-	@AfterEach
-	void tearDown() throws Exception {
-	}
+    @BeforeEach
+    void setUp() throws Exception {
+        ToDoMock.reset();
+        bdControlada = new DBStub();
+        repo = new Repositorio(bdControlada);
+    }
 
-	@Test
-	void testBuscarServicio() {
-		assertEquals(repo.buscarServicio("AYUDA"),ToDoMock.ejemplo.getNombre());
-	}
+    @AfterEach
+    void tearDown() throws Exception {
+        // Nada que limpiar
+    }
 
-	@Test
-	void testCompletadoServicio() {
-		assertTrue(repo.completadoServicio(ToDoMock.ejemplo));
-	}
+    @Test
+    void testUnidad_buscarServicio_devuelveNombreSiExiste() {
+        // Arrange: insertamos en la BD controlada directamente
+        bdControlada.CREATE(ToDoMock.ejemplo);
+        // Act
+        String nombre = repo.buscarServicio("AYUDA");
+        // Assert
+        assertEquals("AYUDA", nombre);
+    }
 
-	@Test
-	void testAgnadirServicio() {
-		assertTrue(repo.agnadirServicio(ToDoMock.ejemplo));
-	}
+    @Test
+    void testUnidad_buscarServicio_devuelveNullSiNoExiste() {
+        String resultado = repo.buscarServicio("NoExiste");
+        assertNull(resultado);
+    }
 
-	@Test
-	void testAgnadirCorreo() {
-		assertTrue(repo.agnadirCorreo("ejemplo@unirioja.es"));
-	}
+    @Test
+    void testUnidad_agnadirServicio_devuelveTrue() {
+        boolean resultado = repo.agnadirServicio(ToDoMock.ejemplo);
+        assertTrue(resultado);
+    }
 
+    @Test
+    void testUnidad_completadoServicio_marcaComoCompletado() {
+        // Arrange: creamos una tarea no completada
+        ToDoMock.ejemplo.setCompletado(false);
+        bdControlada.CREATE(ToDoMock.ejemplo);
+        // Act
+        boolean resultado = repo.completadoServicio(ToDoMock.ejemplo);
+        // Assert: debe devolver true y la tarea debe estar completada
+        assertTrue(resultado);
+        assertTrue(ToDoMock.ejemplo.isCompletado());
+    }
+
+    @Test
+    void testUnidad_agnadirCorreo_devuelveTrue() {
+        boolean resultado = repo.agnadirCorreo("ejemplo@unirioja.es");
+        assertTrue(resultado);
+    }
+
+    @Test
+    void testIntegracion_agnadirYBuscarServicio() {
+        repo.agnadirServicio(ToDoMock.ejemplo);
+        String nombreEncontrado = repo.buscarServicio("AYUDA");
+        assertEquals("AYUDA", nombreEncontrado);
+    }
+
+    @Test
+    void testIntegracion_agnadirYCompletarServicio() {
+        ToDoMock.ejemplo.setCompletado(false);
+        repo.agnadirServicio(ToDoMock.ejemplo);
+        repo.completadoServicio(ToDoMock.ejemplo);
+        assertTrue(ToDoMock.ejemplo.isCompletado());
+    }
+
+    @Test
+    void testIntegracion_agnadirCorreoYVerificarEnBD() {
+        repo.agnadirCorreo("integración@unirioja.es");
+        assertEquals("integración@unirioja.es",
+                     bdControlada.getCorreo("integración@unirioja.es"));
+    }
 }

@@ -5,5 +5,15 @@ import java.time.LocalDate;
 import com.tt1.test.ToDo;
 
 public class ToDoMock {
-	public static final ToDo ejemplo=new ToDo("Ayuda", "Este texto es un ejemplo", LocalDate.of(0, 0, 0), true);
+
+    public static ToDo ejemplo = new ToDo("AYUDA", "Este texto es un ejemplo", LocalDate.of(2025, 1, 1), true);
+
+    public static void reset() {
+        ejemplo = new ToDo(
+            "AYUDA",
+            "Este texto es un ejemplo",
+            LocalDate.of(2025, 1, 1),
+            true
+        );
+    }
 }
