@@ -29,5 +29,5 @@ jobs:
           git config user.email "github-actions@github.com"
           git fetch origin
           git checkout early
-          git merge main --no-ff -m "Auto-merge main into early tras pasar los tests"
+          git merge main --allow-unrelated-histories --no-ff -m "Auto-merge main into early tras pasar los tests"
           git push origin early
